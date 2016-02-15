@@ -18,8 +18,8 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 package message_test
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 	"toto-build-common/message"
 )
 

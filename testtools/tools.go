@@ -42,4 +42,3 @@ func ConsumeStringChan(c chan string) string {
 	}
 	return buffer.String()
 }
-

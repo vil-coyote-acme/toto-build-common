@@ -18,8 +18,8 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 package testtools
 
 import (
-	"github.com/nsqio/nsq/nsqlookupd"
 	"github.com/nsqio/nsq/nsqd"
+	"github.com/nsqio/nsq/nsqlookupd"
 )
 
 type Broker struct {
@@ -27,17 +27,18 @@ type Broker struct {
 }
 
 func NewBroker() *Broker {
-	return new (Broker)
+	return new(Broker)
 }
 
-func (b *Broker) Start()  {
+func (b *Broker) Start() {
 	b.exit = make(chan bool, 1)
 	// start nsqlookup first
 	go func() {
 		opt := nsqlookupd.NewOptions()
+		opt.BroadcastAddress = "127.0.0.1"
 		broker := nsqlookupd.New(opt)
 		broker.Main()
-		<- b.exit
+		<-b.exit
 		broker.Exit()
 	}()
 	// then nsqd
@@ -46,9 +47,9 @@ func (b *Broker) Start()  {
 		opt.NSQLookupdTCPAddresses = []string{"127.0.0.1:4160"}
 		n := nsqd.New(opt)
 		n.Main()
-		<- b.exit
+		<-b.exit
 		n.Exit()
-	} ()
+	}()
 }
 
 func (b *Broker) Stop() {

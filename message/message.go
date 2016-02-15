@@ -21,6 +21,7 @@ import "fmt"
 
 // type of available commands
 type Command int
+
 const (
 	PACKAGE Command = iota
 	TEST
@@ -28,6 +29,7 @@ const (
 
 // job execution state
 type State int
+
 const (
 	PENDING State = iota
 	WORKING
@@ -37,8 +39,8 @@ const (
 
 // message to run new job
 type ToWork struct {
-	JobId int64
-	Cmd Command
+	JobId   int64
+	Cmd     Command
 	Package string
 	// todo string function
 	// todo add repository and credentials
@@ -50,9 +52,9 @@ func (t ToWork) String() string {
 
 // message to report job execution
 type Report struct {
-	JobId int64
+	JobId  int64
 	Status State
-	Logs []string
+	Logs   []string
 }
 
 type Error struct {

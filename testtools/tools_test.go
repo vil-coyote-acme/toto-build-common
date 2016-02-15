@@ -18,10 +18,10 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 package testtools_test
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
-	"toto-build-common/testtools"
 	"github.com/nsqio/go-nsq"
+	"github.com/stretchr/testify/assert"
+	"testing"
+	"toto-build-common/testtools"
 )
 
 func Test_Should_Create_New_TestErr(t *testing.T) {
@@ -38,7 +38,7 @@ func Test_Should_ConsumeStringChan(t *testing.T) {
 	assert.Equal(t, "tototiti", mes)
 }
 
-func Test_Embedded_Broker(t *testing.T) {
+func Test_Embedded_Broker_On_Publish(t *testing.T) {
 	// given
 	b := testtools.NewBroker()
 	b.Start()
