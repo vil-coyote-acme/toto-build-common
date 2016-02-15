@@ -35,7 +35,6 @@ func (b *Broker) Start() {
 	// start nsqlookup first
 	go func() {
 		opt := nsqlookupd.NewOptions()
-		opt.BroadcastAddress = "127.0.0.1"
 		broker := nsqlookupd.New(opt)
 		broker.Main()
 		<-b.exit
@@ -44,6 +43,7 @@ func (b *Broker) Start() {
 	// then nsqd
 	go func() {
 		opt := nsqd.NewOptions()
+		opt.BroadcastAddress = "127.0.0.1"
 		opt.NSQLookupdTCPAddresses = []string{"127.0.0.1:4160"}
 		n := nsqd.New(opt)
 		n.Main()
