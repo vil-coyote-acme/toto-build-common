@@ -21,6 +21,7 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"toto-build-common/testtools"
+	"github.com/nsqio/go-nsq"
 )
 
 func Test_Should_Create_New_TestErr(t *testing.T) {
@@ -35,4 +36,20 @@ func Test_Should_ConsumeStringChan(t *testing.T) {
 	close(c)
 	mes := testtools.ConsumeStringChan(c)
 	assert.Equal(t, "tototiti", mes)
+}
+
+func Test_Embedded_Broker(t *testing.T) {
+	// given
+	b := testtools.NewBroker()
+	b.Start()
+	defer b.Stop()
+	// and
+	config := nsq.NewConfig()
+	p, errP := nsq.NewProducer("127.0.0.1:4150", config)
+	// when
+	errPub := p.Publish("myTopic", make([]byte, 256))
+	//then
+	assert.Nil(t, errP)
+	assert.Nil(t, errPub)
+	assert.NotNil(t, p)
 }

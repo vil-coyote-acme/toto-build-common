@@ -18,28 +18,39 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 package testtools
 
 import (
-	"bytes"
+	"github.com/nsqio/nsq/nsqlookupd"
+	"github.com/nsqio/nsq/nsqd"
 )
 
-type TestErr struct {
-	message string
+type Broker struct {
+	exit chan bool
 }
 
-func (err TestErr) Error() string {
-	return err.message
+func NewBroker() *Broker {
+	return new (Broker)
 }
 
-func NewTestErr(mess string) TestErr {
-	err := new(TestErr)
-	err.message = mess
-	return *err
+func (b *Broker) Start()  {
+	b.exit = make(chan bool, 1)
+	// start nsqlookup first
+	go func() {
+		opt := nsqlookupd.NewOptions()
+		broker := nsqlookupd.New(opt)
+		broker.Main()
+		<- b.exit
+		broker.Exit()
+	}()
+	// then nsqd
+	go func() {
+		opt := nsqd.NewOptions()
+		opt.NSQLookupdTCPAddresses = []string{"127.0.0.1:4160"}
+		n := nsqd.New(opt)
+		n.Main()
+		<- b.exit
+		n.Exit()
+	} ()
 }
 
-func ConsumeStringChan(c chan string) string {
-	var buffer bytes.Buffer
-	for line := range c {
-		buffer.WriteString(line)
-	}
-	return buffer.String()
+func (b *Broker) Stop() {
+	b.exit <- true
 }
-
