@@ -20,6 +20,7 @@ package testtools
 import (
 	"github.com/nsqio/nsq/nsqd"
 	"github.com/nsqio/nsq/nsqlookupd"
+	"time"
 )
 
 type Broker struct {
@@ -50,6 +51,8 @@ func (b *Broker) Start() {
 		<-b.exit
 		n.Exit()
 	}()
+	duration,_ := time.ParseDuration("300ms")
+	time.Sleep(duration)
 }
 
 func (b *Broker) Stop() {
