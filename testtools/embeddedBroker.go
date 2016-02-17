@@ -24,7 +24,8 @@ import (
 )
 
 type Broker struct {
-	exit chan bool
+	lookup *nsqlookupd.NSQLookupd
+	broker *nsqd.NSQD
 }
 
 func NewBroker() *Broker {
@@ -32,31 +33,25 @@ func NewBroker() *Broker {
 }
 
 func (b *Broker) Start() {
-	b.exit = make(chan bool, 1)
 	// start nsqlookup first
 	go func() {
 		opt := nsqlookupd.NewOptions()
-		broker := nsqlookupd.New(opt)
-		broker.Main()
-		<-b.exit
-		broker.Exit()
+		b.lookup = nsqlookupd.New(opt)
+		b.lookup.Main()
 	}()
 	// then nsqd
 	go func() {
 		opt := nsqd.NewOptions()
 		opt.BroadcastAddress = "127.0.0.1"
 		opt.NSQLookupdTCPAddresses = []string{"127.0.0.1:4160"}
-		n := nsqd.New(opt)
-		n.Main()
-		<-b.exit
-		n.Exit()
+		b.broker = nsqd.New(opt)
+		b.broker.Main()
 	}()
 	duration,_ := time.ParseDuration("300ms")
 	time.Sleep(duration)
 }
 
 func (b *Broker) Stop() {
-	b.exit <- true
-	duration,_ := time.ParseDuration("300ms")
-	time.Sleep(duration)
+	b.broker.Exit()
+	b.lookup.Exit()
 }
