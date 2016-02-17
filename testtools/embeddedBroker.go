@@ -57,4 +57,6 @@ func (b *Broker) Start() {
 
 func (b *Broker) Stop() {
 	b.exit <- true
+	duration,_ := time.ParseDuration("300ms")
+	time.Sleep(duration)
 }
