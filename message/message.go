@@ -57,6 +57,10 @@ type Report struct {
 	Logs   []string
 }
 
+func (r Report) String() string {
+	return fmt.Sprintf("JobId: %d, Status: %d, Logs: %v ", r.JobId, r.Status, r.Logs)
+}
+
 type Error struct {
 	Mes string
 }

@@ -28,6 +28,11 @@ func Test_ToWork_String(t *testing.T) {
 		message.ToWork{int64(1), message.PACKAGE, "myPackage"}.String())
 }
 
+func Test_Report_String(t *testing.T)  {
+	assert.Equal(t, "JobId: 1, Status: 1, Logs: [my Log] ",
+		message.Report{int64(1), message.WORKING, []string{"my Log"}}.String())
+}
+
 func Test_Error(t *testing.T) {
 	assert.Equal(t, "myError", message.Error{"myError"}.Error())
 }
