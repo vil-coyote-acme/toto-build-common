@@ -19,7 +19,14 @@ package testtools
 
 import (
 	"bytes"
+	"github.com/nsqio/go-nsq"
+	"toto-build-common/message"
+	"encoding/json"
 )
+
+type HandlerTest struct {
+	Receip chan message.Report
+}
 
 type TestErr struct {
 	message string
@@ -33,6 +40,13 @@ func NewTestErr(mess string) TestErr {
 	err := new(TestErr)
 	err.message = mess
 	return *err
+}
+
+func (h *HandlerTest) HandleMessage(mes *nsq.Message) (e error) {
+	var report message.Report
+	json.Unmarshal(mes.Body, &report)
+	h.Receip <- report
+	return e
 }
 
 func ConsumeStringChan(c chan string) string {

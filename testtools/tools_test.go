@@ -22,6 +22,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"toto-build-common/testtools"
+	"toto-build-common/message"
+	"encoding/json"
 )
 
 func Test_Should_Create_New_TestErr(t *testing.T) {
@@ -52,4 +54,17 @@ func Test_Embedded_Broker_On_Publish(t *testing.T) {
 	assert.Nil(t, errP)
 	assert.Nil(t, errPub)
 	assert.NotNil(t, p)
+}
+
+func Test_HandleMessage(t *testing.T) {
+	//given
+	handler := testtools.HandlerTest{make(chan message.Report, 2)}
+	msg := new (nsq.Message)
+	report := message.Report{int64(1), message.PENDING, []string{"test"}}
+	msg.Body, _ = json.Marshal(report)
+	// when
+	handler.HandleMessage(msg)
+	// then
+	assert.Equal(t, report, <-handler.Receip)
+
 }
