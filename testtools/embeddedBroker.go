@@ -20,7 +20,6 @@ package testtools
 import (
 	"github.com/nsqio/nsq/nsqd"
 	"github.com/nsqio/nsq/nsqlookupd"
-	"time"
 	"sync"
 )
 
