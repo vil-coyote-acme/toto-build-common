@@ -22,8 +22,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"toto-build-common/testtools"
-	"toto-build-common/message"
 	"encoding/json"
+	"github.com/vil-coyote-acme/toto-build-common/message"
 )
 
 func Test_Should_Create_New_TestErr(t *testing.T) {

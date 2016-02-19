@@ -20,8 +20,8 @@ package testtools
 import (
 	"bytes"
 	"github.com/nsqio/go-nsq"
-	"toto-build-common/message"
 	"encoding/json"
+"github.com/vil-coyote-acme/toto-build-common/message"
 )
 
 type HandlerTest struct {
