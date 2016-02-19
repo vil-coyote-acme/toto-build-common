@@ -25,3 +25,4 @@ _testmain.go
 
 ## tmp file from embedded broker output
 **/*.tmp
+**/*.dat

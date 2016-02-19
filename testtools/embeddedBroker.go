@@ -21,6 +21,7 @@ import (
 	"github.com/nsqio/nsq/nsqd"
 	"github.com/nsqio/nsq/nsqlookupd"
 	"time"
+	"sync"
 )
 
 type Broker struct {
@@ -34,21 +35,35 @@ func NewBroker() *Broker {
 
 func (b *Broker) Start() {
 	// start nsqlookup first
+	b.StartLookUp()
+	// then nsqd
+	b.StartBroker()
+}
+
+func (b *Broker) StartLookUp()  {
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
 		opt := nsqlookupd.NewOptions()
 		b.lookup = nsqlookupd.New(opt)
 		b.lookup.Main()
+		wg.Done()
 	}()
-	// then nsqd
+	wg.Wait()
+}
+
+func (b *Broker) StartBroker(){
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
 		opt := nsqd.NewOptions()
 		opt.BroadcastAddress = "127.0.0.1"
 		opt.NSQLookupdTCPAddresses = []string{"127.0.0.1:4160"}
 		b.broker = nsqd.New(opt)
 		b.broker.Main()
+		wg.Done()
 	}()
-	duration,_ := time.ParseDuration("300ms")
-	time.Sleep(duration)
+	wg.Wait()
 }
 
 func (b *Broker) Stop() {
