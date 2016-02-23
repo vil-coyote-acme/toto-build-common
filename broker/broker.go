@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
-package testtools
+package broker
 
 import (
 	"github.com/nsqio/nsq/nsqd"
@@ -39,7 +39,7 @@ func (b *Broker) Start() {
 	b.StartBroker()
 }
 
-func (b *Broker) StartLookUp()  {
+func (b *Broker) StartLookUp() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -51,7 +51,7 @@ func (b *Broker) StartLookUp()  {
 	wg.Wait()
 }
 
-func (b *Broker) StartBroker(){
+func (b *Broker) StartBroker() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -66,6 +66,10 @@ func (b *Broker) StartBroker(){
 }
 
 func (b *Broker) Stop() {
-	b.broker.Exit()
-	b.lookup.Exit()
+	if b.broker != nil {
+		b.broker.Exit()
+	}
+	if b.lookup != nil {
+		b.lookup.Exit()
+	}
 }

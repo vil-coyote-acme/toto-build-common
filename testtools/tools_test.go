@@ -24,6 +24,7 @@ import (
 	"toto-build-common/testtools"
 	"encoding/json"
 	"github.com/vil-coyote-acme/toto-build-common/message"
+	"toto-build-common/broker"
 )
 
 func Test_Should_Create_New_TestErr(t *testing.T) {
@@ -40,22 +41,6 @@ func Test_Should_ConsumeStringChan(t *testing.T) {
 	assert.Equal(t, "tototiti", mes)
 }
 
-func Test_Embedded_Broker_On_Publish(t *testing.T) {
-	// given
-	b := testtools.NewBroker()
-	b.Start()
-	defer b.Stop()
-	// and
-	config := nsq.NewConfig()
-	p, errP := nsq.NewProducer("127.0.0.1:4150", config)
-	// when
-	errPub := p.Publish("myTopic", make([]byte, 256))
-	//then
-	assert.Nil(t, errP)
-	assert.Nil(t, errPub)
-	assert.NotNil(t, p)
-}
-
 func Test_HandleMessage(t *testing.T) {
 	//given
 	handler := testtools.HandlerTest{make(chan message.Report, 2)}
@@ -70,7 +55,7 @@ func Test_HandleMessage(t *testing.T) {
 
 func Test_SetupListener(t *testing.T) {
 	// given
-	b := testtools.NewBroker()
+	b := broker.NewBroker()
 	b.Start()
 	defer b.Stop()
 	//and
