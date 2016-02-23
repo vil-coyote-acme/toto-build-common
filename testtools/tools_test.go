@@ -59,12 +59,30 @@ func Test_Embedded_Broker_On_Publish(t *testing.T) {
 func Test_HandleMessage(t *testing.T) {
 	//given
 	handler := testtools.HandlerTest{make(chan message.Report, 2)}
-	msg := new (nsq.Message)
+	msg := new(nsq.Message)
 	report := message.Report{int64(1), message.PENDING, []string{"test"}}
 	msg.Body, _ = json.Marshal(report)
 	// when
 	handler.HandleMessage(msg)
 	// then
 	assert.Equal(t, report, <-handler.Receip)
+}
 
+func Test_SetupListener(t *testing.T) {
+	// given
+	b := testtools.NewBroker()
+	b.Start()
+	defer b.Stop()
+	//and
+	config := nsq.NewConfig()
+	p, _ := nsq.NewProducer("127.0.0.1:4150", config)
+	report := message.Report{int64(1), message.PENDING, []string{"test"}}
+	body, _ := json.Marshal(report)
+	p.Publish("test", body)
+	//when
+	channel, consumer := testtools.SetupListener("test")
+	// then
+	assert.NotNil(t, consumer)
+	assert.NotNil(t, channel)
+	assert.Equal(t, report, <- channel)
 }
