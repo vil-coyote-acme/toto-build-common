@@ -25,6 +25,7 @@ type Command int
 const (
 	PACKAGE Command = iota
 	TEST
+	HELLO
 )
 
 // job execution state
