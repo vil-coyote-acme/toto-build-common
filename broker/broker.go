@@ -73,3 +73,9 @@ func (b *Broker) Stop() {
 		b.lookup.Exit()
 	}
 }
+
+func (b *Broker) CreateTopic(topicName string) {
+	if b.broker != nil {
+		b.broker.GetTopic(topicName)
+	}
+}
