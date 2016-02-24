@@ -62,7 +62,7 @@ func SetupListener(topic string) (chan message.Report, *nsq.Consumer) {
 	duration, _ := time.ParseDuration("300ms")
 	time.Sleep(duration)
 	handler := new(HandlerTest)
-	receip := make(chan message.Report, 2)
+	receip := make(chan message.Report, 1)
 	handler.Receip = receip
 	consumer, _ := nsq.NewConsumer(topic, "scheduler", nsq.NewConfig())
 	consumer.AddHandler(handler)
