@@ -77,7 +77,7 @@ func (b *Broker) StartBroker() {
 		opt := nsqd.NewOptions()
 		opt.TCPAddress = b.BrokerAddr + ":" + b.BrokerPort
 		opt.BroadcastAddress = b.BrokerBroadCastAddr
-		opt.NSQLookupdTCPAddresses = []string{"127.0.0.1:4160"}
+		opt.NSQLookupdTCPAddresses = []string{b.LookUpTcpAddrr + ":" + b.LookUpTcpPort}
 		b.broker = nsqd.New(opt)
 		b.broker.Main()
 		wg.Done()
