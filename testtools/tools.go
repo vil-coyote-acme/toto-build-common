@@ -21,7 +21,7 @@ import (
 	"bytes"
 	"github.com/nsqio/go-nsq"
 	"encoding/json"
-"github.com/vil-coyote-acme/toto-build-common/message"
+	"github.com/vil-coyote-acme/toto-build-common/message"
 	"time"
 )
 
@@ -58,7 +58,7 @@ func ConsumeStringChan(c chan string) string {
 	return buffer.String()
 }
 
-func SetupListener(topic string) (chan message.Report, *nsq.Consumer) {
+func SetupListener(topic string, lookUpHttpAddrAndPort string) (chan message.Report, *nsq.Consumer) {
 	duration, _ := time.ParseDuration("300ms")
 	time.Sleep(duration)
 	handler := new(HandlerTest)
@@ -66,6 +66,6 @@ func SetupListener(topic string) (chan message.Report, *nsq.Consumer) {
 	handler.Receip = receip
 	consumer, _ := nsq.NewConsumer(topic, "scheduler", nsq.NewConfig())
 	consumer.AddHandler(handler)
-	consumer.ConnectToNSQLookupds([]string{"127.0.0.1:4161"})
+	consumer.ConnectToNSQLookupds([]string{lookUpHttpAddrAndPort})
 	return receip, consumer
 }

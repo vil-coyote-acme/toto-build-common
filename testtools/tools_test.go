@@ -65,7 +65,7 @@ func Test_SetupListener(t *testing.T) {
 	body, _ := json.Marshal(report)
 	p.Publish("test", body)
 	//when
-	channel, consumer := testtools.SetupListener("test")
+	channel, consumer := testtools.SetupListener("test", b.LookUpHttpAddrr + ":" + b.LookUpHttpPort)
 	// then
 	assert.NotNil(t, consumer)
 	assert.NotNil(t, channel)
