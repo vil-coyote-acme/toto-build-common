@@ -30,6 +30,11 @@ type Broker struct {
 	BrokerAddr          string // default value 0.0.0.0
 	BrokerPort          string // default value 4150
 	BrokerBroadCastAddr string // default 127.0.0.1 -- change it
+
+	LookUpTcpAddrr      string
+	LookUpTcpPort       string
+	LookUpHttpAddrr     string
+	LookUpHttpPort      string
 }
 
 func NewBroker() *Broker {
@@ -37,6 +42,10 @@ func NewBroker() *Broker {
 	b.BrokerAddr = "0.0.0.0"
 	b.BrokerPort = "4150"
 	b.BrokerBroadCastAddr = "127.0.0.1"
+	b.LookUpTcpAddrr = "0.0.0.0"
+	b.LookUpTcpPort = "4160"
+	b.LookUpHttpAddrr = "0.0.0.0"
+	b.LookUpHttpPort = "4161"
 	return b
 }
 
@@ -52,6 +61,8 @@ func (b *Broker) StartLookUp() {
 	wg.Add(1)
 	go func() {
 		opt := nsqlookupd.NewOptions()
+		opt.TCPAddress = b.LookUpTcpAddrr + ":" + b.LookUpTcpPort
+		opt.HTTPAddress = b.LookUpHttpAddrr + ":" + b.LookUpHttpPort
 		b.lookup = nsqlookupd.New(opt)
 		b.lookup.Main()
 		wg.Done()
