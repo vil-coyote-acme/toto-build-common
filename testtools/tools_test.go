@@ -32,13 +32,13 @@ func Test_Should_Create_New_TestErr(t *testing.T) {
 	assert.Equal(t, "error", myError.Error())
 }
 
-func Test_Should_ConsumeStringChan(t *testing.T) {
-	c := make(chan string, 2)
-	c <- "toto"
-	c <- "titi"
-	close(c)
-	mes := testtools.ConsumeStringChan(c)
-	assert.Equal(t, "tototiti", mes)
+func Test_fromSliceToString(t *testing.T) {
+	// given
+	sli := []string{"toto", "titi"}
+	// when
+	str := testtools.FromSliceToString(sli)
+	// then
+	assert.Contains(t, str, "toto", "titi")
 }
 
 func Test_HandleMessage(t *testing.T) {

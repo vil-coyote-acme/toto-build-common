@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"github.com/vil-coyote-acme/toto-build-common/message"
 	"time"
+	"fmt"
 )
 
 type HandlerTest struct {
@@ -50,10 +51,10 @@ func (h *HandlerTest) HandleMessage(mes *nsq.Message) (e error) {
 	return e
 }
 
-func ConsumeStringChan(c chan string) string {
+func FromSliceToString(s []string) string {
 	var buffer bytes.Buffer
-	for line := range c {
-		buffer.WriteString(line)
+	for _, line := range s {
+		buffer.WriteString(fmt.Sprintln(line))
 	}
 	return buffer.String()
 }
