@@ -3,21 +3,15 @@ package logs
 
 type Level int
 
-const (
-	DEBUG Level = iota
-	INFO
-	ERROR
-)
-
 type Logger struct {
 	prefix string
-	Level Level
+	appender *Appender
 }
 
-func NewLogger(prefix string, Level Level) *Logger {
+func NewLogger(prefix string, appender *Appender) *Logger {
 	l := new(Logger)
 	l.prefix = prefix
-	l.Level = Level
+	l.appender = appender
 	return l
 }
 
