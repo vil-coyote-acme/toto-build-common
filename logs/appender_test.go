@@ -6,10 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-/*
- * todo remove the [] from print (where does this come from ?)
- */
-
 // will test the appender for write operation while
 // calling it with a superior level than minimal required
 func Test_write_should_append_new_line_on_sup_log_level(t *testing.T) {
@@ -17,9 +13,9 @@ func Test_write_should_append_new_line_on_sup_log_level(t *testing.T) {
 	bufString := bytes.NewBufferString("")
 	appender := newAppender(INFO, bufString)
 	// when
-	appender.write(ERROR, "toto")
+	appender.write(ERROR, []interface {}{"toto"})
 	// then
-	assert.Contains(t,bufString.String(), "toto")
+	assert.Equal(t,bufString.String(), "toto")
 }
 
 // will test the appender for write operation while
@@ -29,9 +25,9 @@ func Test_write_should_append_new_line_on_minimal_log_level(t *testing.T) {
 	bufString := bytes.NewBufferString("")
 	appender := newAppender(INFO, bufString)
 	// when
-	appender.write(INFO, "toto")
+	appender.write(INFO, []interface {}{"toto"})
 	// then
-	assert.Contains(t,bufString.String(), "toto")
+	assert.Equal(t,bufString.String(), "toto")
 }
 
 // will test the appender for write operation while
@@ -41,7 +37,7 @@ func Test_write_should_not_append_new_line(t *testing.T) {
 	bufString := bytes.NewBufferString("")
 	appender := newAppender(INFO, bufString)
 	// when
-	appender.write(DEBUG, "toto")
+	appender.write(DEBUG, []interface {}{"toto"})
 	// then
 	assert.Equal(t, "", bufString.String())
 }
@@ -54,9 +50,9 @@ func Test_writef_should_append_new_line_on_sup_log_level(t *testing.T) {
 	bufString := bytes.NewBufferString("")
 	appender := newAppender(INFO, bufString)
 	// when
-	appender.writef(ERROR, "the number is : %d", 1)
+	appender.writef(ERROR, "the number is : %d", []interface {}{1})
 	// then
-	assert.Contains(t,bufString.String(), "the number is : [1]")
+	assert.Equal(t,bufString.String(), "the number is : 1")
 }
 
 // will test the appender for write foperation while
@@ -66,9 +62,9 @@ func Test_writef_should_append_new_line_on_minimal_log_level(t *testing.T) {
 	bufString := bytes.NewBufferString("")
 	appender := newAppender(INFO, bufString)
 	// when
-	appender.writef(INFO, "the number is : %d", 1)
+	appender.writef(INFO, "the number is : %d", []interface {}{1})
 	// then
-	assert.Contains(t,bufString.String(), "the number is : [1]")
+	assert.Equal(t,bufString.String(), "the number is : 1")
 }
 
 // will test the appender for writef operation while
@@ -78,7 +74,7 @@ func Test_writef_should_not_append_new_line(t *testing.T) {
 	bufString := bytes.NewBufferString("")
 	appender := newAppender(INFO, bufString)
 	// when
-	appender.writef(DEBUG, "the number is : %d", 1)
+	appender.writef(DEBUG, "the number is : %d", []interface {}{1})
 	// then
 	assert.Equal(t, "", bufString.String())
 }

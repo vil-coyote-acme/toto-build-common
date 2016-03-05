@@ -29,14 +29,16 @@ func NewConsoleAppender(level Level) *Appender {
 	return newAppender(level, os.Stdout)
 }
 
-func (a *Appender) write(level Level, structs ...interface{}) {
+// todo test what's append with many struct (how many line for exemple...)
+// maybe wrapping the writer ?...
+func (a *Appender) write(level Level, structs []interface{}) {
 	if a.level <= level {
-		fmt.Fprint(a.writer, structs)
+		fmt.Fprint(a.writer, structs...)
 	}
 }
 
-func (a *Appender) writef(level Level, template string, structs ...interface{}) {
+func (a *Appender) writef(level Level, template string, structs []interface{}) {
 	if a.level <= level {
-		fmt.Fprintf(a.writer,template, structs)
+		fmt.Fprintf(a.writer,template, structs...)
 	}
 }
