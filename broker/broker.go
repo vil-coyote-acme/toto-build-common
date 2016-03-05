@@ -21,6 +21,8 @@ import (
 	"github.com/nsqio/nsq/nsqd"
 	"github.com/nsqio/nsq/nsqlookupd"
 	"sync"
+	"fmt"
+	"toto-build-common/logs"
 )
 
 type Broker struct {
@@ -29,14 +31,16 @@ type Broker struct {
 				   //
 	BrokerAddr          string // default value 0.0.0.0
 	BrokerPort          string // default value 4150
-	BrokerHttpAddr	    string // 0.0.0.0
-	BrokerHttpPort	    string
+	BrokerHttpAddr      string // 0.0.0.0
+	BrokerHttpPort      string
 	BrokerBroadCastAddr string // default 127.0.0.1 -- change it
 
 	LookUpTcpAddrr      string
 	LookUpTcpPort       string
 	LookUpHttpAddrr     string
 	LookUpHttpPort      string
+
+	logger              *logs.Logger
 }
 
 func NewBroker() *Broker {
@@ -50,7 +54,15 @@ func NewBroker() *Broker {
 	b.LookUpHttpPort = "4161"
 	b.BrokerHttpAddr = "0.0.0.0"
 	b.BrokerHttpPort = "4151"
+	b.logger = logs.NewLogger("[Embeded nsq Broker] : ", logs.NewConsoleAppender(logs.INFO))
+	b.logger.Infof("Instantiate new broker : ", b)
 	return b
+}
+
+func (b *Broker) String() string {
+	return fmt.Sprintf("BrokerAddr: %s, BrokerPort: %s, BrokerBroadCastAddr: %s, LookUpTcpAddrr: %s, LookUpTcpPort: %s, LookUpHttpAddrr: %s, LookUpHttpPort: %s, BrokerHttpAddr: %s, BrokerHttpPort: %s",
+		b.BrokerAddr, b.BrokerPort, b.BrokerBroadCastAddr, b.LookUpTcpAddrr, b.LookUpTcpPort,
+		b.LookUpHttpAddrr, b.LookUpHttpPort, b.BrokerHttpAddr, b.BrokerHttpPort)
 }
 
 func (b *Broker) Start() {
@@ -61,6 +73,7 @@ func (b *Broker) Start() {
 }
 
 func (b *Broker) StartLookUp() {
+	b.logger.Info("start lookup service")
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -70,11 +83,13 @@ func (b *Broker) StartLookUp() {
 		b.lookup = nsqlookupd.New(opt)
 		b.lookup.Main()
 		wg.Done()
+		b.logger.Info("lookup service started")
 	}()
 	wg.Wait()
 }
 
 func (b *Broker) StartBroker() {
+	b.logger.Info("start broker service")
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -86,6 +101,7 @@ func (b *Broker) StartBroker() {
 		b.broker = nsqd.New(opt)
 		b.broker.Main()
 		wg.Done()
+		b.logger.Info("broker service started")
 	}()
 	wg.Wait()
 }
@@ -93,8 +109,10 @@ func (b *Broker) StartBroker() {
 func (b *Broker) Stop() {
 	if b.broker != nil {
 		b.broker.Exit()
+		b.logger.Info("broker service stopped")
 	}
 	if b.lookup != nil {
 		b.lookup.Exit()
+		b.logger.Info("lookup service stopped")
 	}
 }
