@@ -40,15 +40,15 @@ const (
 
 // message to run new job
 type ToWork struct {
-	JobId   int64
-	Cmd     Command
-	Package string
-	// todo string function
+	JobId     int64
+	Cmd       Command
+	Package   string
+	GoVersion string
 	// todo add repository and credentials
 }
 
 func (t ToWork) String() string {
-	return fmt.Sprintf("JobId: %d, Cmd: %d, Package: %s ", t.JobId, t.Cmd, t.Package)
+	return fmt.Sprintf("JobId: %d, Cmd: %d, Package: %s, GoVersion: %s ", t.JobId, t.Cmd, t.Package, t.GoVersion)
 }
 
 // message to report job execution

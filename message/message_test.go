@@ -24,8 +24,8 @@ import (
 )
 
 func Test_ToWork_String(t *testing.T) {
-	assert.Equal(t, "JobId: 1, Cmd: 0, Package: myPackage ",
-		message.ToWork{int64(1), message.PACKAGE, "myPackage"}.String())
+	assert.Equal(t, "JobId: 1, Cmd: 0, Package: myPackage, GoVersion: go1.6 ",
+		message.ToWork{int64(1), message.PACKAGE, "myPackage", "go1.6"}.String())
 }
 
 func Test_Report_String(t *testing.T)  {
