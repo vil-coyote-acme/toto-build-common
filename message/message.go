@@ -17,7 +17,9 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 package message
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // type of available commands
 type Command int
@@ -44,11 +46,12 @@ type ToWork struct {
 	Cmd       Command
 	Package   string
 	GoVersion string
-	// todo add repository and credentials
+	RepoUrl	  string
+	// todo add credentials
 }
 
 func (t ToWork) String() string {
-	return fmt.Sprintf("JobId: %d, Cmd: %d, Package: %s, GoVersion: %s ", t.JobId, t.Cmd, t.Package, t.GoVersion)
+	return fmt.Sprintf("JobId: %d, Cmd: %d, Package: %s, GoVersion: %s, RepoUrl: %s", t.JobId, t.Cmd, t.Package, t.GoVersion, t.RepoUrl)
 }
 
 // message to report job execution
